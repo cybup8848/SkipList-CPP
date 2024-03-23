@@ -111,10 +111,7 @@ Node<K,V>* SkipList<K,V>::createNode(K k,V v,int level){
 template<typename K,typename V>
 bool SkipList<K,V>::insertElement(K key,V value){
 	std::lock_guard<std::mutex> lock(mx);
-	//mx.lock();
 
-	std::cout<<"forward "<<key<<std::endl;
-	
 	Node<K,V>** update=new Node<K,V>*[this->_maxLevel+1];
 	memset(update,0,sizeof(Node<K,V>*)*(this->_maxLevel+1));
 	Node<K,V> *current=this->_header;
@@ -125,7 +122,6 @@ bool SkipList<K,V>::insertElement(K key,V value){
 		update[i]=current;
 	}
 	
-	std::cout<<"进行到这一步"<<std::endl;
 	current=current->_forward[0];
 	if(current!=nullptr&&current->getKey()==key){//已经存在
 		std::cout<<"already exist"<<std::endl;
@@ -134,8 +130,6 @@ bool SkipList<K,V>::insertElement(K key,V value){
 		//mx.unlock();
 		return false;
 	}
-
-	std::cout<<"middle"<<std::endl;
 
 	int level=this->getRandomLevel();
 	for(int i=this->_skipListLevel+1;i<=level;i++){
@@ -152,8 +146,6 @@ bool SkipList<K,V>::insertElement(K key,V value){
 	std::cout<<"insert ("<<key<<","<<value<<")"<<" successfully"<<std::endl;
 	delete[] update;
 	update=nullptr;
-	std::cout<<"backward "<<key<<std::endl;
-	//mx.unlock();
 	return true;
 }
 
